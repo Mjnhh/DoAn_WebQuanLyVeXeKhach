@@ -6,8 +6,9 @@
     <display-name>Hệ thống quản lý vé xe khách</display-name>
     
     <welcome-file-list>
-        <welcome-file>login.jsp</welcome-file>
+        <welcome-file>customer-home.jsp</welcome-file>
         <welcome-file>index.html</welcome-file>
+        <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
     
     <session-config>

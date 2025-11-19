@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -18,6 +19,16 @@
             <i class="fas fa-plus-circle"></i> Thêm tài khoản
         </button>
     </div>
+
+    <!-- Alert Messages -->
+    <c:if test="${not empty sessionScope.message}">
+        <div class="alert alert-${sessionScope.messageType} alert-dismissible fade show" role="alert">
+            ${sessionScope.message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <c:remove var="message" scope="session"/>
+        <c:remove var="messageType" scope="session"/>
+    </c:if>
 
     <!-- Data Table -->
     <div class="card border-0 shadow-sm">
@@ -201,6 +212,7 @@ function editTaiKhoan(username, password, role, hoTen, sdt, email, diaChi) {
 </script>
 
 <jsp:include page="layout/footer.jsp"/>
+
 
 
 

@@ -118,13 +118,14 @@ public class VeXeDAO {
             }
             
             // 3. Thêm vé mới
-            String sql = "INSERT INTO VeXe (maCX, maKH, soGhe, trangThai, ghiChu) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO VeXe (maCX, maKH, soGhe, trangThai, ghiChu, phuongThucThanhToan) VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, ve.getMaCX());
                 ps.setInt(2, ve.getMaKH());
                 ps.setInt(3, ve.getSoGhe());
                 ps.setString(4, ve.getTrangThai() != null ? ve.getTrangThai() : "Đã đặt");
                 ps.setString(5, ve.getGhiChu());
+                ps.setString(6, ve.getPhuongThucThanhToan() != null ? ve.getPhuongThucThanhToan() : "COD");
                 
                 if (ps.executeUpdate() > 0) {
                     // Lấy ID vừa tạo và set vào object
@@ -307,6 +308,28 @@ public class VeXeDAO {
     }
 
     /**
+     * Lấy vé theo số điện thoại
+     */
+    public List<VeXe> getVeBySdt(String sdt) {
+        List<VeXe> list = new ArrayList<>();
+        String sql = "SELECT * FROM V_ThongTinVe WHERE sdtKhachHang = ? ORDER BY ngayDat DESC";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, sdt);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(extractVeXeDetailFromResultSet(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
      * Đếm tổng số vé
      */
     public int getTotalCount() {
@@ -354,6 +377,13 @@ public class VeXeDAO {
         ve.setNgayDat(rs.getTimestamp("ngayDat"));
         ve.setTrangThai(rs.getString("trangThaiVe"));
         ve.setGhiChu(rs.getString("ghiChu"));
+        // Try to get phuongThucThanhToan if column exists
+        try {
+            ve.setPhuongThucThanhToan(rs.getString("phuongThucThanhToan"));
+        } catch (SQLException e) {
+            // Column might not exist in older database versions
+            ve.setPhuongThucThanhToan("COD");
+        }
         
         // Thông tin chuyến xe
         ChuyenXe cx = new ChuyenXe();

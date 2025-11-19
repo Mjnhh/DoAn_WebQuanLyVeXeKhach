@@ -77,6 +77,7 @@ CREATE TABLE VeXe (
     ngayDat DATETIME DEFAULT GETDATE(),
     trangThai NVARCHAR(20) DEFAULT N'Đã đặt' CHECK (trangThai IN (N'Đã đặt', N'Đã hủy', N'Đã sử dụng')),
     ghiChu NVARCHAR(200),
+    phuongThucThanhToan NVARCHAR(20) DEFAULT 'COD' CHECK (phuongThucThanhToan IN ('COD', 'Online')),
     FOREIGN KEY (maCX) REFERENCES ChuyenXe(maCX) ON DELETE CASCADE,
     FOREIGN KEY (maKH) REFERENCES KhachHang(maKH) ON DELETE CASCADE
 );
@@ -152,6 +153,7 @@ SELECT
     v.ngayDat,
     v.trangThai AS trangThaiVe,
     v.ghiChu,
+    v.phuongThucThanhToan,
     cx.maCX,
     cx.soXe,
     cx.diemDi,
@@ -186,6 +188,8 @@ SELECT
     cx.trangThai
 FROM ChuyenXe cx;
 GO
+
+
 
 
 

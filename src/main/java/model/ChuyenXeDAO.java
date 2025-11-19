@@ -124,25 +124,34 @@ public class ChuyenXeDAO {
      */
     public List<ChuyenXe> searchChuyenXe(String diemDi, String diemDen, Date ngayKhoiHanh) {
         List<ChuyenXe> list = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT * FROM ChuyenXe WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT * FROM ChuyenXe WHERE trangThai = N'Hoạt động' AND soGheTrong > 0");
+        List<Object> params = new ArrayList<>();
         
         if (diemDi != null && !diemDi.trim().isEmpty()) {
-            sql.append(" AND diemDi LIKE N'%").append(diemDi).append("%'");
+            sql.append(" AND diemDi LIKE ?");
+            params.add("%" + diemDi.trim() + "%");
         }
         if (diemDen != null && !diemDen.trim().isEmpty()) {
-            sql.append(" AND diemDen LIKE N'%").append(diemDen).append("%'");
+            sql.append(" AND diemDen LIKE ?");
+            params.add("%" + diemDen.trim() + "%");
         }
         if (ngayKhoiHanh != null) {
-            sql.append(" AND ngayKhoiHanh = '").append(ngayKhoiHanh).append("'");
+            sql.append(" AND ngayKhoiHanh = ?");
+            params.add(ngayKhoiHanh);
         }
         sql.append(" ORDER BY ngayKhoiHanh, gioKhoiHanh");
         
         try (Connection conn = DBConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql.toString())) {
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             
-            while (rs.next()) {
-                list.add(extractChuyenXeFromResultSet(rs));
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(extractChuyenXeFromResultSet(rs));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

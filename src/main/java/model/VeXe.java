@@ -13,6 +13,7 @@ public class VeXe {
     private Timestamp ngayDat;
     private String trangThai;
     private String ghiChu;
+    private String phuongThucThanhToan; // COD hoặc Online
 
     // Thông tin chi tiết từ JOIN
     private ChuyenXe chuyenXe;
@@ -110,6 +111,14 @@ public class VeXe {
         this.khachHang = khachHang;
     }
 
+    public String getPhuongThucThanhToan() {
+        return phuongThucThanhToan;
+    }
+
+    public void setPhuongThucThanhToan(String phuongThucThanhToan) {
+        this.phuongThucThanhToan = phuongThucThanhToan;
+    }
+
     @Override
     public String toString() {
         return "VeXe{" +
@@ -120,6 +129,7 @@ public class VeXe {
                 ", ngayDat=" + ngayDat +
                 ", trangThai='" + trangThai + '\'' +
                 ", ghiChu='" + ghiChu + '\'' +
+                ", phuongThucThanhToan='" + phuongThucThanhToan + '\'' +
                 '}';
     }
 }
